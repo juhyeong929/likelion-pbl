@@ -3,3 +3,9 @@ likelion-pbl
 
 Spring Boot 메인 클래스는 `com.likelion.likelionpbl.LikelionPblApplication`입니다.
 `GET /hello` 요청을 보내면 `Hello, Spring Boot!`를 반환합니다.
+
+멤버 API:
+
+- `POST /members`
+- `GET /members`
+- `GET /members/{name}`
