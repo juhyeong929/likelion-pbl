@@ -26,4 +26,8 @@ public class Lion extends Role {
                 "파트: " + getPart() + "\n" +
                 "학번: " + studentId;
     }
+
+    public String getStudentId() {
+        return studentId;
+    }
 }

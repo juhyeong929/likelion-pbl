@@ -7,6 +7,10 @@ public interface MemberRepository {
 
     void save(Role member);
 
+    void updateByName(String name, Role member);
+
+    boolean deleteByName(String name);
+
     Role findByName(String name);
 
     List<Role> findAll();
