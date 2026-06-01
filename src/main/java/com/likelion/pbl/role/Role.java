@@ -4,6 +4,7 @@ import com.likelion.pbl.policy.SubmissionPolicy;
 
 public abstract class Role {
 
+    private Long id;
     private final String name;
     private final String major;
     private final int generation;
@@ -14,6 +15,14 @@ public abstract class Role {
         this.major = major;
         this.generation = generation;
         this.part = part;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

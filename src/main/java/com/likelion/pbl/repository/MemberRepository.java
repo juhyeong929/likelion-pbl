@@ -7,13 +7,13 @@ public interface MemberRepository {
 
     void save(Role member);
 
-    void updateByName(String name, Role member);
+    void updateById(Long id, Role member);
 
-    boolean deleteByName(String name);
+    boolean deleteById(Long id);
 
-    Role findByName(String name);
+    Role findById(Long id);
 
     List<Role> findAll();
 
-    boolean existsByName(String name);
+    boolean existsById(Long id);
 }

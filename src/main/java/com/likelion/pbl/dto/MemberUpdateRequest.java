@@ -1,10 +1,11 @@
 package com.likelion.pbl.dto;
 
-public record LionCreateRequest(
+public record MemberUpdateRequest(
         String name,
         String major,
         int generation,
         String part,
-        String studentId
+        String studentId,
+        String position
 ) {
 }

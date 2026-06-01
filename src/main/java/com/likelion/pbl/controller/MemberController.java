@@ -1,15 +1,11 @@
 package com.likelion.pbl.controller;
 
-import com.likelion.pbl.dto.LionCreateRequest;
-import com.likelion.pbl.dto.LionResponse;
-import com.likelion.pbl.dto.LionUpdateRequest;
-import com.likelion.pbl.dto.StaffCreateRequest;
-import com.likelion.pbl.dto.StaffResponse;
-import com.likelion.pbl.dto.StaffUpdateRequest;
-import com.likelion.pbl.role.Lion;
+import com.likelion.pbl.dto.MemberCreateRequest;
+import com.likelion.pbl.dto.MemberResponse;
+import com.likelion.pbl.dto.MemberUpdateRequest;
 import com.likelion.pbl.role.Role;
-import com.likelion.pbl.role.Staff;
 import com.likelion.pbl.service.MemberService;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,66 +27,47 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/lions")
-    public ResponseEntity<LionResponse> createLion(@RequestBody LionCreateRequest request) {
-        Lion createdLion = memberService.createLion(request);
-        if (createdLion == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    @PostMapping
+    public ResponseEntity<MemberResponse> createMember(@RequestBody MemberCreateRequest request) {
+        Role createdMember = memberService.createMember(request);
+        if (createdMember == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(LionResponse.from(createdLion));
+        return ResponseEntity.status(HttpStatus.CREATED).body(MemberResponse.from(createdMember));
     }
 
-    @PostMapping("/staffs")
-    public ResponseEntity<StaffResponse> createStaff(@RequestBody StaffCreateRequest request) {
-        Staff createdStaff = memberService.createStaff(request);
-        if (createdStaff == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(StaffResponse.from(createdStaff));
+    @GetMapping
+    public ResponseEntity<List<MemberResponse>> getAllMembers() {
+        List<MemberResponse> responses = memberService.getAllMembers().stream()
+                .map(MemberResponse::from)
+                .toList();
+        return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<?> getMemberByName(@PathVariable String name) {
-        Role member = memberService.findMemberByName(name);
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponse> getMemberById(@PathVariable Long id) {
+        Role member = memberService.findMemberById(id);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        if (member instanceof Lion lion) {
-            return ResponseEntity.ok(LionResponse.from(lion));
-        }
-        if (member instanceof Staff staff) {
-            return ResponseEntity.ok(StaffResponse.from(staff));
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity.ok(MemberResponse.from(member));
     }
 
-    @PutMapping("/lions/{name}")
-    public ResponseEntity<LionResponse> updateLion(
-            @PathVariable String name,
-            @RequestBody LionUpdateRequest request
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberResponse> updateMember(
+            @PathVariable Long id,
+            @RequestBody MemberUpdateRequest request
     ) {
-        Lion updatedLion = memberService.updateLion(name, request);
-        if (updatedLion == null) {
+        Role updatedMember = memberService.updateMember(id, request);
+        if (updatedMember == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(LionResponse.from(updatedLion));
+        return ResponseEntity.ok(MemberResponse.from(updatedMember));
     }
 
-    @PutMapping("/staffs/{name}")
-    public ResponseEntity<StaffResponse> updateStaff(
-            @PathVariable String name,
-            @RequestBody StaffUpdateRequest request
-    ) {
-        Staff updatedStaff = memberService.updateStaff(name, request);
-        if (updatedStaff == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(StaffResponse.from(updatedStaff));
-    }
-
-    @DeleteMapping("/{name}")
-    public ResponseEntity<Void> deleteMember(@PathVariable String name) {
-        if (!memberService.deleteMember(name)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
+        if (!memberService.deleteMember(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.noContent().build();

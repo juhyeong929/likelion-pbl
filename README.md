@@ -6,12 +6,11 @@ Spring Boot 메인 클래스는 `com.likelion.likelionpbl.LikelionPblApplication
 
 멤버 API:
 
-- `POST /members/lions`
-- `POST /members/staffs`
-- `GET /members/{name}`
-- `PUT /members/lions/{name}`
-- `PUT /members/staffs/{name}`
-- `DELETE /members/{name}`
+- `POST /members`
+- `GET /members`
+- `GET /members/{id}`
+- `PUT /members/{id}`
+- `DELETE /members/{id}`
 
 핵심 코드 파일:
 
