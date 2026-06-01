@@ -3,11 +3,9 @@ package com.likelion.pbl.repository;
 import com.likelion.pbl.role.Role;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@Profile("auto")
 public class MemoryMemberRepository implements MemberRepository {
 
     private final List<Role> members = new ArrayList<>();
@@ -15,6 +13,21 @@ public class MemoryMemberRepository implements MemberRepository {
     @Override
     public void save(Role member) {
         members.add(member);
+    }
+
+    @Override
+    public void updateByName(String name, Role member) {
+        for (int index = 0; index < members.size(); index++) {
+            if (members.get(index).getName().equals(name)) {
+                members.set(index, member);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public boolean deleteByName(String name) {
+        return members.removeIf(member -> member.getName().equals(name));
     }
 
     @Override
@@ -34,6 +47,11 @@ public class MemoryMemberRepository implements MemberRepository {
 
     @Override
     public boolean existsByName(String name) {
-        return findByName(name) != null;
+        for (Role member : members) {
+            if (member.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

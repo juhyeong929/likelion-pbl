@@ -26,4 +26,8 @@ public class Staff extends Role {
                 "파트: " + getPart() + "\n" +
                 "직책: " + position;
     }
+
+    public String getPosition() {
+        return position;
+    }
 }
