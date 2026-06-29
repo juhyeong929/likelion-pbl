@@ -1,6 +1,6 @@
-package com.likelion.likelionpbl.dto;
+package com.likelion.likelionpbl.member.dto;
 
-import com.likelion.likelionpbl.domain.Member;
+import com.likelion.likelionpbl.member.domain.Member;
 
 public record MemberResponse(
         Long id,

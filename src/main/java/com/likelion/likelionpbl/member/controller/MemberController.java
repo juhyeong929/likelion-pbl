@@ -1,12 +1,13 @@
-package com.likelion.likelionpbl.controller;
+package com.likelion.likelionpbl.member.controller;
 
-import com.likelion.likelionpbl.domain.Member;
-import com.likelion.likelionpbl.dto.LionCreateRequest;
-import com.likelion.likelionpbl.dto.MemberResponse;
-import com.likelion.likelionpbl.dto.LionUpdateRequest;
-import com.likelion.likelionpbl.dto.StaffCreateRequest;
-import com.likelion.likelionpbl.dto.StaffUpdateRequest;
-import com.likelion.likelionpbl.service.MemberService;
+import com.likelion.likelionpbl.member.domain.Member;
+import com.likelion.likelionpbl.member.dto.LionCreateRequest;
+import com.likelion.likelionpbl.member.dto.LionUpdateRequest;
+import com.likelion.likelionpbl.member.dto.MemberResponse;
+import com.likelion.likelionpbl.member.dto.StaffCreateRequest;
+import com.likelion.likelionpbl.member.dto.StaffUpdateRequest;
+import com.likelion.likelionpbl.member.service.MemberService;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/members")

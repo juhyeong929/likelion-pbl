@@ -1,16 +1,18 @@
-package com.likelion.likelionpbl.service;
+package com.likelion.likelionpbl.member.service;
 
-import com.likelion.likelionpbl.domain.Member;
-import com.likelion.likelionpbl.domain.RoleType;
-import com.likelion.likelionpbl.dto.LionCreateRequest;
-import com.likelion.likelionpbl.dto.LionUpdateRequest;
-import com.likelion.likelionpbl.dto.StaffCreateRequest;
-import com.likelion.likelionpbl.dto.StaffUpdateRequest;
-import com.likelion.likelionpbl.repository.MemberRepository;
+import com.likelion.likelionpbl.member.domain.Member;
+import com.likelion.likelionpbl.member.domain.RoleType;
+import com.likelion.likelionpbl.member.dto.LionCreateRequest;
+import com.likelion.likelionpbl.member.dto.LionUpdateRequest;
+import com.likelion.likelionpbl.member.dto.StaffCreateRequest;
+import com.likelion.likelionpbl.member.dto.StaffUpdateRequest;
+import com.likelion.likelionpbl.member.repository.MemberRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -19,6 +21,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public Member createLion(LionCreateRequest request) {
         Member member = new Member(
                 request.name(),
@@ -32,6 +35,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional
     public Member createStaff(StaffCreateRequest request) {
         Member member = new Member(
                 request.name(),
@@ -45,6 +49,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional
     public Member updateLion(Long id, LionUpdateRequest request) {
         Member member = memberRepository.findById(id).orElse(null);
         if (member == null || member.getRoleType() != RoleType.LION) {
@@ -53,10 +58,11 @@ public class MemberService {
 
         member.updateInfo(request.major(), request.generation(), request.part());
         member.updateStudentId(request.studentId());
-        
+
         return memberRepository.save(member);
     }
 
+    @Transactional
     public Member updateStaff(Long id, StaffUpdateRequest request) {
         Member member = memberRepository.findById(id).orElse(null);
         if (member == null || member.getRoleType() != RoleType.STAFF) {
@@ -69,6 +75,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional
     public boolean deleteMember(Long id) {
         if (!memberRepository.existsById(id)) {
             return false;

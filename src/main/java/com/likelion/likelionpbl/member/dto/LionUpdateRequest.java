@@ -1,7 +1,6 @@
-package com.likelion.likelionpbl.dto;
+package com.likelion.likelionpbl.member.dto;
 
-public record LionCreateRequest(
-        String name,
+public record LionUpdateRequest(
         String major,
         int generation,
         String part,

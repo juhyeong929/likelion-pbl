@@ -1,4 +1,4 @@
-package com.likelion.likelionpbl.domain;
+package com.likelion.likelionpbl.member.domain;
 
 public enum RoleType {
     LION("아기사자"),

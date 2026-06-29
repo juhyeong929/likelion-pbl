@@ -1,4 +1,4 @@
-package com.likelion.likelionpbl.dto;
+package com.likelion.likelionpbl.member.dto;
 
 public record StaffCreateRequest(
         String name,

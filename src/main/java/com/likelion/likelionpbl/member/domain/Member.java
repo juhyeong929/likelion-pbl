@@ -1,6 +1,15 @@
-package com.likelion.likelionpbl.domain;
+package com.likelion.likelionpbl.member.domain;
 
-import jakarta.persistence.*;
+import com.likelion.likelionpbl.assignment.domain.Assignment;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -19,6 +28,9 @@ public class Member {
 
     private String studentId;
     private String position;
+
+    @OneToMany(mappedBy = "member")
+    private List<Assignment> assignments = new ArrayList<>();
 
     protected Member() {
     }
