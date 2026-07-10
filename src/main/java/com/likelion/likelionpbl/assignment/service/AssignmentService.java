@@ -4,8 +4,8 @@ import com.likelion.likelionpbl.assignment.domain.Assignment;
 import com.likelion.likelionpbl.assignment.dto.AssignmentCreateRequest;
 import com.likelion.likelionpbl.assignment.dto.AssignmentUpdateRequest;
 import com.likelion.likelionpbl.assignment.repository.AssignmentRepository;
-import com.likelion.likelionpbl.member.domain.Member;
-import com.likelion.likelionpbl.member.repository.MemberRepository;
+import com.likelion.likelionpbl.global.exception.AssignmentNotFoundException;
+import com.likelion.likelionpbl.member.service.MemberService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,22 +15,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
-    public AssignmentService(AssignmentRepository assignmentRepository, MemberRepository memberRepository) {
+    public AssignmentService(
+            AssignmentRepository assignmentRepository,
+            MemberService memberService
+    ) {
         this.assignmentRepository = assignmentRepository;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
 
     @Transactional
     public Assignment createAssignment(Long memberId, AssignmentCreateRequest request) {
-        Member member = memberRepository.findById(memberId).orElse(null);
-        if (member == null) {
-            return null;
-        }
+        var member = memberService.findMemberById(memberId);
 
         Assignment assignment = new Assignment(request.title(), request.description(), member);
         return assignmentRepository.save(assignment);
+    }
+
+    public List<Assignment> findAll() {
+        return assignmentRepository.findAll();
     }
 
     public List<Assignment> findByMemberId(Long memberId) {
@@ -38,26 +42,25 @@ public class AssignmentService {
     }
 
     public Assignment findById(Long id) {
-        return assignmentRepository.findById(id).orElse(null);
+        return assignmentRepository.findById(id)
+                .orElseThrow(() -> new AssignmentNotFoundException("과제를 찾을 수 없습니다. id=" + id));
+    }
+
+    public List<Assignment> searchByTitle(String keyword) {
+        return assignmentRepository.findByTitleContaining(keyword);
     }
 
     @Transactional
     public Assignment updateAssignment(Long id, AssignmentUpdateRequest request) {
-        Assignment assignment = assignmentRepository.findById(id).orElse(null);
-        if (assignment == null) {
-            return null;
-        }
+        Assignment assignment = findById(id);
 
         assignment.updateInfo(request.title(), request.description());
         return assignmentRepository.save(assignment);
     }
 
     @Transactional
-    public boolean deleteAssignment(Long id) {
-        if (!assignmentRepository.existsById(id)) {
-            return false;
-        }
+    public void deleteAssignment(Long id) {
+        findById(id);
         assignmentRepository.deleteById(id);
-        return true;
     }
 }

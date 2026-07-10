@@ -1,5 +1,7 @@
 package com.likelion.likelionpbl.member.service;
 
+import com.likelion.likelionpbl.global.exception.DuplicateMemberException;
+import com.likelion.likelionpbl.global.exception.MemberNotFoundException;
 import com.likelion.likelionpbl.member.domain.Member;
 import com.likelion.likelionpbl.member.domain.RoleType;
 import com.likelion.likelionpbl.member.dto.LionCreateRequest;
@@ -23,6 +25,8 @@ public class MemberService {
 
     @Transactional
     public Member createLion(LionCreateRequest request) {
+        validateDuplicateName(request.name());
+
         Member member = new Member(
                 request.name(),
                 request.major(),
@@ -37,6 +41,8 @@ public class MemberService {
 
     @Transactional
     public Member createStaff(StaffCreateRequest request) {
+        validateDuplicateName(request.name());
+
         Member member = new Member(
                 request.name(),
                 request.major(),
@@ -51,9 +57,9 @@ public class MemberService {
 
     @Transactional
     public Member updateLion(Long id, LionUpdateRequest request) {
-        Member member = memberRepository.findById(id).orElse(null);
-        if (member == null || member.getRoleType() != RoleType.LION) {
-            return null;
+        Member member = findMemberById(id);
+        if (member.getRoleType() != RoleType.LION) {
+            throw new MemberNotFoundException("멤버를 찾을 수 없습니다. id=" + id);
         }
 
         member.updateInfo(request.major(), request.generation(), request.part());
@@ -64,9 +70,9 @@ public class MemberService {
 
     @Transactional
     public Member updateStaff(Long id, StaffUpdateRequest request) {
-        Member member = memberRepository.findById(id).orElse(null);
-        if (member == null || member.getRoleType() != RoleType.STAFF) {
-            return null;
+        Member member = findMemberById(id);
+        if (member.getRoleType() != RoleType.STAFF) {
+            throw new MemberNotFoundException("멤버를 찾을 수 없습니다. id=" + id);
         }
 
         member.updateInfo(request.major(), request.generation(), request.part());
@@ -76,19 +82,27 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean deleteMember(Long id) {
-        if (!memberRepository.existsById(id)) {
-            return false;
-        }
+    public void deleteMember(Long id) {
+        findMemberById(id);
         memberRepository.deleteById(id);
-        return true;
     }
 
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
 
+    public List<Member> findByPart(String part) {
+        return memberRepository.findByPart(part);
+    }
+
     public Member findMemberById(Long id) {
-        return memberRepository.findById(id).orElse(null);
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다. id=" + id));
+    }
+
+    private void validateDuplicateName(String name) {
+        if (memberRepository.findByName(name).isPresent()) {
+            throw new DuplicateMemberException("이미 존재하는 멤버 이름입니다. name=" + name);
+        }
     }
 }
